@@ -1,4 +1,4 @@
-package com.example.demo.rip.service;
+package com.example.demo.rip;
 
 public interface NodeInterface extends UnicastServiceUserInterface {
 }

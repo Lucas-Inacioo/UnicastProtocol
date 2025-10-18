@@ -4,9 +4,9 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.rip.service.Manager;
-import com.example.demo.rip.service.Node;
-import com.example.demo.rip.service.UCSAP;
+import com.example.demo.rip.Manager;
+import com.example.demo.rip.Node;
+import com.example.demo.rip.UCSAP;
 
 import java.nio.file.Path;
 import java.util.*;

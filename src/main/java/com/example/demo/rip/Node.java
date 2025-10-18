@@ -1,4 +1,4 @@
-package com.example.demo.rip.service;
+package com.example.demo.rip;
 
 public class Node extends UCSAP implements NodeInterface {
   public Node(int UCSAPId, String hostName, int port) {

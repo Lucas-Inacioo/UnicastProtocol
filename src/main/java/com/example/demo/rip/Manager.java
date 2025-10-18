@@ -1,8 +1,4 @@
-package com.example.demo.rip.service;
-
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
+package com.example.demo.rip;
 
 public class Manager extends UCSAP implements ManagerInterface {
   public Manager(int UCSAPId, String hostName, int port) {
