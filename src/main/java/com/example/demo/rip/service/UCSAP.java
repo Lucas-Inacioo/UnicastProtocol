@@ -1,25 +1,21 @@
-package com.example.demo.simulation;
+package com.example.demo.rip.service;
 
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
+public abstract class UCSAP implements Runnable {
+  protected final int UCSAPId;
+  protected final String hostName;
+  protected final int port;
 
-public class NodeRunner implements Runnable {
-  private final int UCSAPId;
-  private final String hostName;
-  private final int port;
-
-  public NodeRunner(int UCSAPId, String hostName, int port) {
+  protected UCSAP(int UCSAPId, String hostName, int port) {
     this.UCSAPId = UCSAPId;
     this.hostName = hostName;
     this.port = port;
   }
 
-  private boolean isValidId(int id) {
+  protected boolean isValidId(int id) {
     return id >= 0;
   }
 
-  private boolean isValidIP(String ip) {
+  protected boolean isValidIP(String ip) {
     if (ip.equals("localhost")) return true;
 
     String[] parts = ip.split("\\.");
@@ -35,7 +31,7 @@ public class NodeRunner implements Runnable {
     return true;
   }
 
-  private boolean isValidPort(int port) {
+  protected boolean isValidPort(int port) {
     return port > 1024;
   }
 

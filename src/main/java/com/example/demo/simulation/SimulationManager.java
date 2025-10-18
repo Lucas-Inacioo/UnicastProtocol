@@ -3,6 +3,11 @@ package com.example.demo.simulation;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+
+import com.example.demo.rip.service.Manager;
+import com.example.demo.rip.service.Node;
+import com.example.demo.rip.service.UCSAP;
+
 import java.nio.file.Path;
 import java.util.*;
 
@@ -85,7 +90,7 @@ public class SimulationManager {
       configs = new ArrayList<>(lastLoaded);
     }
 
-    // Start a NodeRunner for each config
+    // Start a UCSAP for each config
     for (UCSAPConfig config : configs) {
       try {
         Integer.parseInt(config.UCSAPId);
@@ -94,12 +99,21 @@ public class SimulationManager {
         System.err.println("Failed to start UCSAP Node with invalid config: " + config.UCSAPId + " " + config.hostName + " " + config.port);
         continue;
       }
-      NodeRunner nodeRunner = new NodeRunner(
-        Integer.parseInt(config.UCSAPId),
-        config.hostName,
-        Integer.parseInt(config.port)
-      );
-      Thread nodeThread = new Thread(nodeRunner);
+      UCSAP ucsap;
+      if (Integer.parseInt(config.UCSAPId) == 0) {
+          ucsap = new Manager(
+          Integer.parseInt(config.UCSAPId),
+          config.hostName,
+          Integer.parseInt(config.port)
+        );
+      } else {
+        ucsap = new Node(
+          Integer.parseInt(config.UCSAPId),
+          config.hostName,
+          Integer.parseInt(config.port)
+        );
+      }
+      Thread nodeThread = new Thread(ucsap);
       nodeThread.start();
     }
   }

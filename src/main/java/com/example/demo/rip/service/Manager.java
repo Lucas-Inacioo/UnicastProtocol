@@ -1,0 +1,40 @@
+package com.example.demo.rip.service;
+
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+public class Manager extends UCSAP implements ManagerInterface {
+  public Manager(int UCSAPId, String hostName, int port) {
+    super(UCSAPId, hostName, port);
+  }
+
+  public void UPDataInd(short originUCSAPId, String data) {
+    System.out.println("Manager " + this.UCSAPId + " received data from UCSAP " + originUCSAPId + ": " + data);
+  }
+
+  @Override
+  public void run() {
+    System.out.println("Running Manager " + this.UCSAPId + " on " + this.hostName + ":" + this.port);
+    try {
+      // validate
+      if (!isValidId(this.UCSAPId))   throw new IllegalArgumentException("Invalid Manager ID: " + this.UCSAPId);
+      if (!isValidIP(this.hostName))  throw new IllegalArgumentException("Invalid host: " + this.hostName);
+      if (!isValidPort(this.port))    throw new IllegalArgumentException("Invalid port: " + this.port);
+
+      // main loop:
+      while (!Thread.currentThread().isInterrupted()) {
+        // work / receive / send
+      }
+    } catch (IllegalArgumentException exception) {
+      // Validation failed
+      System.err.println("[MANAGER " + this.UCSAPId + "] start failed: " + exception.getMessage());
+      return;
+    } catch (Exception exception) {
+      System.err.println("[MANAGER " + this.UCSAPId + "] crashed: " + exception.getMessage());
+    } finally {
+      // cleanup resources (close socket, etc.)
+      System.out.println("UCSAP Manager " + this.UCSAPId + " has stopped.");
+    }
+  }
+}

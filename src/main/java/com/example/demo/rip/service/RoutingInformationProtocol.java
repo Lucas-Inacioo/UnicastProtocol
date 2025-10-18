@@ -1,4 +1,4 @@
-package com.example.demo.unicast.service;
+package com.example.demo.rip.service;
 
 import org.springframework.stereotype.Service;
 
