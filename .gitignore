@@ -1,0 +1,61 @@
+# DEMO GITIGNORE FOR MAVEN JAVA PROJECTS
+
+# === Build artifacts ===
+target/
+*.jar
+*.war
+*.ear
+
+# Maven
+.mvn/timing.properties
+# (Keep the wrapper! commit: .mvn/wrapper/**, mvnw, mvnw.cmd)
+!/.mvn/wrapper/maven-wrapper.jar
+!mvnw
+!mvnw.cmd
+
+# Logs & reports
+logs/
+*.log
+hs_err_pid*
+replay_pid*
+*.hprof
+# Maven test reports (optional to ignore)
+surefire-reports/
+failsafe-reports/
+
+# IDEs / Editors
+#. VS Code
+.vscode/
+.history/
+
+#. IntelliJ / Android Studio
+.idea/
+*.iml
+out/
+
+#. Eclipse
+.project
+.classpath
+.settings/
+.bin/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Local env/config (adjust to your naming)
+.env
+.env.*
+application-local.properties
+application-*.local.properties
+application-secrets.properties
+
+# If you keep per-machine test configs, ignore them:
+config.local.txt
+*.local.cfg
+*.private.cfg
+
+# Temporary files
+*.swp
+*.swo
+*~

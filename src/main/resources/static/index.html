@@ -1,0 +1,7 @@
+<!doctype html><meta charset="utf-8"><title>Demo</title>
+<button id="b">Call /api/hello</button><pre id="out"></pre>
+<script>
+document.getElementById('b').onclick = async () => {
+  const r = await fetch('/api/hello'); out.textContent = JSON.stringify(await r.json(), null, 2);
+};
+</script>
