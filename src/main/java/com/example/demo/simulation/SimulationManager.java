@@ -12,10 +12,10 @@ public class SimulationManager {
   public static final class UCSAPConfig {
     public final String UCSAPId;
     public final String hostName;
-    public final int port;
+    public final String port;
 
     // Constructor for UCSAPConfig
-    public UCSAPConfig(String UCSAPId, String hostName, int port) {
+    public UCSAPConfig(String UCSAPId, String hostName, String port) {
       this.UCSAPId = UCSAPId;
       this.hostName = hostName;
       this.port = port;
@@ -51,33 +51,8 @@ public class SimulationManager {
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid config line " + lineNumber + ": " + line);
         }
 
-        // Check that UCSAP_id is a natural number
-        try {
-          int ucsapId = Integer.parseInt(parts[0]);
-          if (ucsapId < 0) throw new NumberFormatException();
-        } catch (NumberFormatException exception) {
-          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UCSAP ID at line " + lineNumber + ": " + parts[0]);
-        }
-
-        // Check that host_name is either 'localhost' or a valid ipv4
-        String host = parts[1];
-        if (!host.equals("localhost")) {
-          try {
-            java.net.InetAddress inetAddress = java.net.InetAddress.getByName(host);
-            if (!(inetAddress instanceof java.net.Inet4Address)) {
-              throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Host is not a valid IPv4 address at line " + lineNumber + ": " + host);
-            }
-          } catch (java.net.UnknownHostException exception) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid host name at line " + lineNumber + ": " + host, exception);
-          }
-        }
-
-        // Check that port_number is a valid port (>1024)
-        int port = Integer.parseInt(parts[2]);
-        if (port < 1025) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid port number at line " + lineNumber + ": " + parts[2]);
-
         // Add the parsed configuration to the list
-        configs.add(new UCSAPConfig(parts[0], parts[1], port));
+        configs.add(new UCSAPConfig(parts[0], parts[1], parts[2]));
       }
     } catch (org.springframework.web.server.ResponseStatusException exception) {
       // If we already have a ResponseStatusException, rethrow it
@@ -101,5 +76,31 @@ public class SimulationManager {
   */
   public List<UCSAPConfig> getLastLoaded() {
     synchronized (lastLoaded) { return List.copyOf(lastLoaded); }
+  }
+
+  public void startNodes() {
+    // Load configs from lastLoaded
+    List<UCSAPConfig> configs;
+    synchronized (lastLoaded) {
+      configs = new ArrayList<>(lastLoaded);
+    }
+
+    // Start a NodeRunner for each config
+    for (UCSAPConfig config : configs) {
+      try {
+        Integer.parseInt(config.UCSAPId);
+        Integer.parseInt(config.port);
+      } catch (NumberFormatException exception) {
+        System.err.println("Failed to start UCSAP Node with invalid config: " + config.UCSAPId + " " + config.hostName + " " + config.port);
+        continue;
+      }
+      NodeRunner nodeRunner = new NodeRunner(
+        Integer.parseInt(config.UCSAPId),
+        config.hostName,
+        Integer.parseInt(config.port)
+      );
+      Thread nodeThread = new Thread(nodeRunner);
+      nodeThread.start();
+    }
   }
 }
